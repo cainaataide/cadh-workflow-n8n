@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Avaliação de Atendimento — CADH Calhau</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal-50:   #E1F5EE;
+      --teal-100:  #9FE1CB;
+      --teal-400:  #1D9E75;
+      --teal-600:  #0F6E56;
+      --teal-800:  #085041;
+      --amber-50:  #FAEEDA;
+      --amber-100: #FAC775;
+      --amber-400: #BA7517;
+      --gray-100:  #D3D1C7;
+      --gray-400:  #888780;
+      --gray-600:  #5F5E5A;
+      --bg:        #f4f6f5;
+      --surface:   #ffffff;
+      --text:      #1a1a1a;
+      --text-muted:#5a5a5a;
+      --text-hint: #999;
+      --border:    rgba(0,0,0,0.10);
+      --border-md: rgba(0,0,0,0.16);
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0 0 40px;
+    }
+    .phone-frame {
+      width: 100%;
+      max-width: 430px;
+      background: var(--bg);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ── TOP BAR WELCOME ── */
+    .top-bar {
+      background: var(--teal-400);
+      padding: 20px 20px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .top-bar::after {
+      content: '';
+      position: absolute;
+      bottom: -22px; left: 0; right: 0;
+      height: 44px;
+      background: var(--bg);
+      border-radius: 50% 50% 0 0 / 22px 22px 0 0;
+    }
+    .logo-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.96);
+      border-radius: 10px;
+      padding: 9px 13px;
+      margin-bottom: 18px;
+    }
+    .logo-hslz { display: flex; flex-direction: column; line-height: 1; flex-shrink: 0; }
+    .logo-hslz .gestao { font-size: 7px; font-weight: 500; color: var(--teal-400); letter-spacing: 0.06em; text-transform: uppercase; }
+    .logo-hslz .hslz { font-size: 18px; font-weight: 700; color: #111; letter-spacing: -0.5px; }
+    .logo-div { width: 0.5px; height: 30px; background: #ccc; flex-shrink: 0; }
+    .logo-ma { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 0; }
+    .gov-do { font-size: 6px; color: #555; letter-spacing: 0.08em; text-transform: uppercase; }
+    .maranhao-text { display: flex; gap: 0px; align-items: center; }
+    .ma-letter { font-size: 13px; font-weight: 800; line-height: 1; }
+    .trabalhando { font-size: 5.5px; color: #666; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 1px; }
+    .logo-sead { display: flex; flex-direction: column; line-height: 1.3; flex-shrink: 0; }
+    .sead-title { font-size: 7.5px; font-weight: 700; color: #333; }
+    .sead-sub { font-size: 5.5px; color: #777; max-width: 54px; line-height: 1.35; }
+    .top-title { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.3; }
+    .top-sub { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+
+    /* ── TOP BAR COMPACT ── */
+    .top-bar-compact {
+      background: var(--teal-400);
+      padding: 14px 20px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .top-bar-compact::after {
+      content: '';
+      position: absolute;
+      bottom: -22px; left: 0; right: 0;
+      height: 44px;
+      background: var(--bg);
+      border-radius: 50% 50% 0 0 / 22px 22px 0 0;
+    }
+    .compact-logo-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.93);
+      border-radius: 8px;
+      padding: 6px 11px;
+      margin-bottom: 12px;
+    }
+    .c-block { display: flex; flex-direction: column; line-height: 1; }
+    .c-gestao { font-size: 6.5px; color: var(--teal-400); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+    .c-hslz { font-size: 13px; font-weight: 700; color: #111; }
+    .c-sep { width: 0.5px; height: 22px; background: #ccc; }
+    .c-sead { font-size: 7px; font-weight: 700; color: #333; }
+    .compact-title { font-size: 15px; font-weight: 500; color: #fff; }
+
+    /* ── CONTENT ── */
+    .content { padding: 22px 20px 32px; }
+    .step { display: none; }
+    .step.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* ── STEP DOTS ── */
+    .step-indicator { display: flex; gap: 6px; justify-content: center; margin-bottom: 22px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-md); transition: background 0.3s; }
+    .dot.active { background: var(--teal-400); }
+    .dot.done { background: var(--teal-100); }
+
+    /* ── LABELS / TITLES ── */
+    .section-label { font-size: 10px; font-weight: 500; color: var(--teal-400); letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 5px; }
+    .section-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
+
+    /* ── PATIENT CARD ── */
+    .paciente-card {
+      background: var(--teal-50);
+      border-radius: var(--radius-lg);
+      padding: 13px 15px;
+      margin-bottom: 22px;
+      display: flex; align-items: center; gap: 12px;
+      border: 0.5px solid var(--teal-100);
+    }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--teal-400);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .pac-name { font-size: 14px; font-weight: 700; color: var(--teal-800); }
+    .pac-info { font-size: 11px; color: var(--teal-600); margin-top: 2px; }
+
+    /* ── CATEGORY CARDS ── */
+    .category-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .category-card.rated { border-color: var(--teal-100); box-shadow: 0 2px 8px rgba(29,158,117,0.07); }
+    .cat-name { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
+    .stars { display: flex; gap: 4px; }
+    .star { width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .star svg { width: 28px; height: 28px; transition: transform 0.15s; }
+    .star:hover svg { transform: scale(1.18); }
+    .star svg path { fill: #ddd; transition: fill 0.2s; }
+    .star.filled svg path { fill: #F5A623; }
+    .star.hover-fill svg path { fill: #FAC775; }
+
+    .cat-comment-wrap {
+      overflow: hidden; max-height: 0;
+      transition: max-height 0.35s ease, margin-top 0.3s ease, opacity 0.25s;
+      opacity: 0; margin-top: 0;
+    }
+    .cat-comment-wrap.open { max-height: 130px; opacity: 1; margin-top: 10px; }
+    .cat-comment {
+      width: 100%;
+      border: 0.5px solid var(--border-md);
+      outline: none;
+      background: var(--bg);
+      border-radius: var(--radius-md);
+      font-size: 12px; font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      resize: none; padding: 9px 11px; line-height: 1.55;
+      transition: border-color 0.2s;
+    }
+    .cat-comment:focus { border-color: var(--teal-400); }
+    .cat-comment::placeholder { color: var(--text-hint); }
+
+    /* ── NPS ── */
+    .nps-row { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-top: 18px; }
+    .nps-num {
+      width: 40px; height: 40px; border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-md);
+      background: var(--surface);
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-muted);
+      transition: all 0.15s;
+    }
+    .nps-num:hover { border-color: var(--teal-400); color: var(--teal-400); }
+    .nps-num.selected { background: var(--teal-400); color: #fff; border-color: var(--teal-400); }
+    .nps-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-hint); margin-top: 8px; }
+
+    /* ── COMMENT BOX ── */
+    .comment-box {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 13px 15px;
+      margin-bottom: 8px;
+    }
+    .comment-box textarea {
+      width: 100%; border: none; outline: none;
+      background: transparent;
+      font-size: 13px; font-family: 'DM Sans', sans-serif;
+      color: var(--text); resize: none; min-height: 95px; line-height: 1.65;
+    }
+    .comment-box textarea::placeholder { color: var(--text-hint); }
+    .char-count { font-size: 10px; color: var(--text-hint); text-align: right; margin-top: 3px; }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      width: 100%; padding: 15px;
+      background: var(--teal-400); color: #fff;
+      border: none; border-radius: var(--radius-lg);
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; margin-top: 16px;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.01em;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(29,158,117,0.25);
+    }
+    .btn-primary:hover { background: var(--teal-600); box-shadow: 0 6px 20px rgba(29,158,117,0.30); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { background: var(--gray-100); color: var(--gray-400); cursor: not-allowed; box-shadow: none; }
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      padding: 0; margin-bottom: 18px;
+      transition: color 0.15s;
+    }
+    .btn-back:hover { color: var(--text); }
+
+    /* ── SUCCESS ── */
+    .success-wrap { text-align: center; padding: 20px 0 28px; }
+    .result-icon {
+      width: 68px; height: 68px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .result-icon.positive { background: var(--teal-50); border: 0.5px solid var(--teal-100); }
+    .result-icon.evolving { background: var(--amber-50); border: 0.5px solid var(--amber-100); }
+    .success-title { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+    .success-msg {
+      font-size: 14px; color: var(--text-muted);
+      line-height: 1.75; margin-bottom: 24px; padding: 0 8px;
+    }
+    .summary-list {
+      text-align: left;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 0.5px solid var(--border);
+      padding: 14px 16px;
+    }
+    .sum-header { font-size: 10px; font-weight: 500; color: var(--text-hint); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+    .sum-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 8px 0; border-bottom: 0.5px solid var(--border); gap: 8px;
+    }
+    .sum-row:last-child { border-bottom: none; }
+    .sum-label { font-size: 13px; color: var(--text); font-weight: 500; }
+    .sum-stars { font-size: 13px; color: #F5A623; flex-shrink: 0; }
+    .sum-comment { font-size: 11px; color: var(--text-hint); margin-top: 4px; font-style: italic; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="phone-frame">
+
+    <!-- Welcome top bar -->
+    <div id="bar-welcome" class="top-bar">
+      <div class="logo-strip">
+        <div class="logo-hslz">
+          <span class="gestao">Gestão</span>
+          <span class="hslz">HSLZ</span>
+        </div>
+        <div class="logo-div"></div>
+        <div class="logo-ma">
+          <span class="gov-do">Governo do</span>
+          <div class="maranhao-text">
+            <span class="ma-letter" style="color:#E63329">M</span>
+            <span class="ma-letter" style="color:#F5A623">A</span>
+            <svg viewBox="0 0 14 14" width="11" height="11" style="flex-shrink:0;margin:0 1px">
+              <polygon points="7,1 8.5,5.5 13,5.5 9.5,8.5 11,13 7,10 3,13 4.5,8.5 1,5.5 5.5,5.5" fill="#3578BE"/>
+            </svg>
+            <span class="ma-letter" style="color:#1DA462">R</span>
+            <span class="ma-letter" style="color:#E63329">A</span>
+            <span class="ma-letter" style="color:#F5A623">N</span>
+            <span class="ma-letter" style="color:#3578BE">H</span>
+            <span class="ma-letter" style="color:#1DA462">Ã</span>
+            <span class="ma-letter" style="color:#E63329">O</span>
+          </div>
+          <span class="trabalhando">Trabalhando para todos</span>
+        </div>
+        <div class="logo-div"></div>
+        <div class="logo-sead">
+          <span class="sead-title">SEAD</span>
+          <span class="sead-sub">Secretaria de Estado da Administração</span>
+        </div>
+      </div>
+      <div class="top-title">Como foi sua consulta?</div>
+      <div class="top-sub">Sua opinião melhora o atendimento</div>
+    </div>
+
+    <!-- Compact top bar -->
+    <div id="bar-compact" class="top-bar-compact" style="display:none">
+      <div class="compact-logo-row">
+        <div class="c-block">
+          <span class="c-gestao">Gestão</span>
+          <span class="c-hslz">HSLZ</span>
+        </div>
+        <div class="c-sep"></div>
+        <div style="display:flex;gap:0px;align-items:center;">
+          <span style="font-size:11px;font-weight:800;color:#E63329">M</span>
+          <span style="font-size:11px;font-weight:800;color:#F5A623">A</span>
+          <svg viewBox="0 0 10 10" width="9" height="9" style="flex-shrink:0;margin:0 1px">
+            <polygon points="5,1 6,3.5 9,3.5 6.8,5.5 7.5,8 5,6.5 2.5,8 3.2,5.5 1,3.5 4,3.5" fill="#3578BE"/>
+          </svg>
+          <span style="font-size:11px;font-weight:800;color:#1DA462">R</span>
+          <span style="font-size:11px;font-weight:800;color:#E63329">A</span>
+          <span style="font-size:11px;font-weight:800;color:#F5A623">N</span>
+          <span style="font-size:11px;font-weight:800;color:#3578BE">H</span>
+          <span style="font-size:11px;font-weight:800;color:#1DA462">Ã</span>
+          <span style="font-size:11px;font-weight:800;color:#E63329">O</span>
+        </div>
+        <div class="c-sep"></div>
+        <span class="c-sead">SEAD</span>
+      </div>
+      <div class="compact-title" id="compact-step-label">Avaliação por categoria</div>
+    </div>
+
+    <div class="content">
+      <div class="step-indicator" id="dots"></div>
+
+      <!-- Step 1: Boas-vindas -->
+      <div class="step active" id="step-1">
+        <div class="paciente-card">
+          <div class="avatar" id="avatar-initials">MJ</div>
+          <div>
+            <div class="pac-name" id="pac-name">Maria José Santos</div>
+            <div class="pac-info" id="pac-info">Dr. Roberto Almeida · 28/03/2026</div>
+          </div>
+        </div>
+        <div class="section-label">Avaliação de atendimento</div>
+        <div class="section-title">Olá! Levará apenas 1 minuto.</div>
+        <p style="font-size:14px;color:var(--text-muted);line-height:1.75;margin-bottom:8px;">
+          Avalie seu atendimento de hoje no CADH Calhau. Você pode comentar individualmente em cada aspecto se quiser — sua opinião chega direto para nossa equipe.
+        </p>
+        <button class="btn-primary" onclick="goTo(2)">Iniciar avaliação</button>
+      </div>
+
+      <!-- Step 2: Categorias -->
+      <div class="step" id="step-2">
+        <button class="btn-back" onclick="goTo(1)">← voltar</button>
+        <div class="section-label">Passo 1 de 3</div>
+        <div class="section-title">Avalie cada aspecto</div>
+        <div id="categories-container"></div>
+        <button class="btn-primary" id="btn-cat" onclick="goTo(3)" disabled>Continuar</button>
+      </div>
+
+      <!-- Step 3: NPS -->
+      <div class="step" id="step-3">
+        <button class="btn-back" onclick="goTo(2)">← voltar</button>
+        <div class="section-label">Passo 2 de 3</div>
+        <div class="section-title">Recomendaria o CADH Calhau para alguém?</div>
+        <div class="nps-row" id="nps-nums"></div>
+        <div class="nps-labels"><span>Não recomendaria</span><span>Recomendaria</span></div>
+        <button class="btn-primary" id="btn-nps" onclick="goTo(4)" disabled style="margin-top:22px">Continuar</button>
+      </div>
+
+      <!-- Step 4: Comentário geral -->
+      <div class="step" id="step-4">
+        <button class="btn-back" onclick="goTo(3)">← voltar</button>
+        <div class="section-label">Passo 3 de 3</div>
+        <div class="section-title">Algum comentário geral?</div>
+        <div class="comment-box">
+          <textarea id="comment" maxlength="300" placeholder="Observações gerais sobre sua visita (opcional)..." oninput="updateChar()"></textarea>
+          <div class="char-count"><span id="char-n">0</span>/300</div>
+        </div>
+        <button class="btn-primary" onclick="submitForm()">Enviar avaliação</button>
+      </div>
+
+      <!-- Step 5: Resultado -->
+      <div class="step" id="step-5">
+        <div class="success-wrap">
+          <div class="result-icon" id="result-icon"></div>
+          <div class="success-title" id="result-title"></div>
+          <div class="success-msg" id="result-msg"></div>
+          <div class="summary-list" id="summary-list"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  /* ── CONFIGURAÇÃO ──────────────────────────────────────────── */
+  // Para pré-preencher via URL: ?nome=Maria+Santos&medico=Dr.+Roberto&data=28/03/2026
+  // O n8n deve gerar o link com esses parâmetros.
+  // Webhook destino — substitua pela URL real do n8n:
+  const WEBHOOK_URL = 'https://SEU_N8N/webhook/avaliacao';
+
+  const CATS = [
+    { id: 'atendimento', label: 'Atendimento médico',    placeholder: 'Como foi a consulta com o médico?' },
+    { id: 'espera',      label: 'Tempo de espera',        placeholder: 'O tempo de espera foi adequado?' },
+    { id: 'recepcao',   label: 'Recepção e acolhimento', placeholder: 'Como foi o atendimento na recepção?' },
+    { id: 'estrutura',  label: 'Estrutura e ambiente',   placeholder: 'O espaço estava confortável e limpo?' },
+  ];
+
+  const ratings = {}, catComments = {};
+  let npsScore = null;
+  const totalSteps = 4;
+  const stepLabels = ['','','Avaliação por categoria','Recomendação','Comentário geral'];
+
+  /* ── URL PARAMS ────────────────────────────────────────────── */
+  function getParam(key) {
+    return new URLSearchParams(window.location.search).get(key) || null;
+  }
+
+  /* ── NAVIGATION ────────────────────────────────────────────── */
+  function buildDots() {
+    const el = document.getElementById('dots');
+    el.innerHTML = '';
+    for (let i = 1; i <= totalSteps; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot'; d.id = 'dot-' + i;
+      el.appendChild(d);
+    }
+  }
+  function updateDots(step) {
+    for (let i = 1; i <= totalSteps; i++) {
+      const d = document.getElementById('dot-' + i);
+      if (d) d.className = 'dot' + (i < step ? ' done' : i === step ? ' active' : '');
+    }
+  }
+  function goTo(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const wb = document.getElementById('bar-welcome');
+    const cb = document.getElementById('bar-compact');
+    const dotsEl = document.getElementById('dots');
+    if (n === 1) {
+      wb.style.display = ''; cb.style.display = 'none'; dotsEl.style.display = 'none';
+    } else if (n === 5) {
+      wb.style.display = 'none'; cb.style.display = '';
+      document.getElementById('compact-step-label').textContent = 'Avaliação concluída';
+      dotsEl.style.display = 'none';
+    } else {
+      wb.style.display = 'none'; cb.style.display = '';
+      document.getElementById('compact-step-label').textContent = stepLabels[n] || '';
+      dotsEl.style.display = 'flex';
+      updateDots(n - 1);
+    }
+  }
+
+  /* ── CATEGORIAS ────────────────────────────────────────────── */
+  function buildCategories() {
+    const cont = document.getElementById('categories-container');
+    cont.innerHTML = '';
+    CATS.forEach(cat => {
+      const card = document.createElement('div');
+      card.className = 'category-card'; card.id = 'card-' + cat.id;
+      card.innerHTML = `
+        <div class="cat-name">${cat.label}</div>
+        <div class="stars" id="stars-${cat.id}">
+          ${[1,2,3,4,5].map(v => `
+            <div class="star" data-cat="${cat.id}" data-val="${v}"
+              onmouseenter="hoverStar('${cat.id}',${v})"
+              onmouseleave="unhoverStar('${cat.id}')"
+              onclick="setStar('${cat.id}',${v})">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>`).join('')}
+        </div>
+        <div class="cat-comment-wrap" id="wrap-${cat.id}">
+          <textarea class="cat-comment" maxlength="200"
+            placeholder="${cat.placeholder}"
+            oninput="saveCatComment('${cat.id}',this.value)"></textarea>
+        </div>`;
+      cont.appendChild(card);
+    });
+  }
+
+  function getStars(id) { return document.querySelectorAll(`#stars-${id} .star`); }
+  function hoverStar(id, val) {
+    getStars(id).forEach(s => s.classList.toggle('hover-fill', +s.dataset.val <= val && !s.classList.contains('filled')));
+  }
+  function unhoverStar(id) { getStars(id).forEach(s => s.classList.remove('hover-fill')); }
+  function setStar(id, val) {
+    ratings[id] = val;
+    getStars(id).forEach(s => s.classList.toggle('filled', +s.dataset.val <= val));
+    document.getElementById('card-' + id).classList.add('rated');
+    document.getElementById('wrap-' + id).classList.add('open');
+    document.getElementById('btn-cat').disabled = !CATS.every(c => ratings[c.id]);
+  }
+  function saveCatComment(id, val) { catComments[id] = val; }
+
+  /* ── NPS ───────────────────────────────────────────────────── */
+  function buildNPS() {
+    const row = document.getElementById('nps-nums');
+    row.innerHTML = '';
+    for (let i = 0; i <= 10; i++) {
+      const d = document.createElement('div');
+      d.className = 'nps-num'; d.textContent = i; d.id = 'nps-' + i;
+      d.onclick = () => {
+        npsScore = i;
+        document.querySelectorAll('.nps-num').forEach(n => n.classList.remove('selected'));
+        d.classList.add('selected');
+        document.getElementById('btn-nps').disabled = false;
+      };
+      row.appendChild(d);
+    }
+  }
+
+  function updateChar() {
+    document.getElementById('char-n').textContent = document.getElementById('comment').value.length;
+  }
+
+  /* ── SUBMIT ────────────────────────────────────────────────── */
+  function submitForm() {
+    const payload = {
+      paciente: document.getElementById('pac-name').textContent,
+      data: document.getElementById('pac-info').textContent,
+      avaliacoes: {},
+      comentarios: {},
+      nps: npsScore,
+      comentario_geral: document.getElementById('comment').value,
+      timestamp: new Date().toISOString()
+    };
+    CATS.forEach(c => {
+      payload.avaliacoes[c.id] = ratings[c.id] || 0;
+      payload.comentarios[c.id] = catComments[c.id] || '';
+    });
+
+    // Envia para o n8n (sem bloquear a UI)
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => {}); // falha silenciosa — não impede a experiência do paciente
+
+    buildSuccess();
+    buildSummary();
+    goTo(5);
+  }
+
+  /* ── TELA FINAL ────────────────────────────────────────────── */
+  function buildSuccess() {
+    const firstName = document.getElementById('pac-name').textContent.trim().split(' ')[0];
+    const icon = document.getElementById('result-icon');
+    const title = document.getElementById('result-title');
+    const msg = document.getElementById('result-msg');
+
+    if (npsScore > 7) {
+      icon.className = 'result-icon positive';
+      icon.innerHTML = `<svg viewBox="0 0 36 36" fill="none" width="34" height="34">
+        <circle cx="18" cy="18" r="17" stroke="#1D9E75" stroke-width="1.5"/>
+        <path d="M10 18.5l5.5 5.5 10.5-11" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`;
+      title.textContent = `Obrigada, ${firstName}!`;
+      msg.textContent = `Sua avaliação foi recebida e já contribui para o nosso crescimento. Esperamos te receber em breve com um atendimento ainda melhor — evoluir em qualidade é o nosso compromisso de cada dia.`;
+    } else {
+      icon.className = 'result-icon evolving';
+      icon.innerHTML = `<svg viewBox="0 0 36 36" fill="none" width="34" height="34">
+        <circle cx="18" cy="18" r="17" stroke="#BA7517" stroke-width="1.5"/>
+        <path d="M10 23 Q13 15 18 18 Q22 21 26 13" stroke="#BA7517" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <polyline points="23,11 26,13 24,16" stroke="#BA7517" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>`;
+      title.textContent = `Pedimos desculpas, ${firstName}.`;
+      msg.textContent = `Lamentamos que sua experiência não tenha sido a ideal. Estamos em constante evolução e em busca da excelência no atendimento — seu retorno nos ajuda a crescer. Esperamos te receber novamente e superar suas expectativas.`;
+    }
+  }
+
+  function buildSummary() {
+    const list = document.getElementById('summary-list');
+    list.innerHTML = '<div class="sum-header">Resumo da sua avaliação</div>';
+    CATS.forEach(c => {
+      const n = ratings[c.id] || 0;
+      const comment = catComments[c.id] || '';
+      const row = document.createElement('div');
+      row.className = 'sum-row';
+      row.style.flexDirection = 'column';
+      row.style.alignItems = 'flex-start';
+      row.innerHTML = `
+        <div style="display:flex;justify-content:space-between;width:100%">
+          <span class="sum-label">${c.label}</span>
+          <span class="sum-stars">${'★'.repeat(n)}${'☆'.repeat(5-n)}</span>
+        </div>
+        ${comment ? `<div class="sum-comment">"${comment}"</div>` : ''}`;
+      list.appendChild(row);
+    });
+    const comment = document.getElementById('comment').value;
+    if (comment) {
+      const row = document.createElement('div');
+      row.className = 'sum-row'; row.style.flexDirection = 'column';
+      row.innerHTML = `<span class="sum-label">Comentário geral</span>
+        <div class="sum-comment" style="margin-top:4px">"${comment}"</div>`;
+      list.appendChild(row);
+    }
+  }
+
+  /* ── PATIENT PRE-FILL ──────────────────────────────────────── */
+  function setPatient(name, doctor, date) {
+    const parts = name.trim().split(' ');
+    const initials = parts.length >= 2
+      ? parts[0][0] + parts[parts.length - 1][0]
+      : parts[0].slice(0, 2);
+    document.getElementById('avatar-initials').textContent = initials.toUpperCase();
+    document.getElementById('pac-name').textContent = name;
+    document.getElementById('pac-info').textContent = `${doctor} · ${date}`;
+  }
+
+  /* ── INIT ──────────────────────────────────────────────────── */
+  buildDots();
+  buildCategories();
+  buildNPS();
+
+  // Lê parâmetros da URL (enviados pelo n8n via link do WhatsApp)
+  const nomePac    = getParam('nome')   || 'Paciente';
+  const medicoPac  = getParam('medico') || 'Médico';
+  const dataPac    = getParam('data')   || new Date().toLocaleDateString('pt-BR');
+  setPatient(nomePac, medicoPac, dataPac);
+
+  goTo(1);
+</script>
+</body>
+</html>
